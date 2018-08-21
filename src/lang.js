@@ -272,44 +272,20 @@
      */
     Lang.prototype._getMessage = function(key, locale) {
         locale = locale || this.getLocale();
-        key = this._parseKey(key, locale);
 
-        // Ensure message source exists.
-        if (this.messages[key.source] === undefined && this.messages[key.sourceFallback] === undefined) {
+        if (this.messages[locale] === undefined) {
+            locale = this.getFallback();
+        }
+
+        if (this.messages[locale][key] === undefined) {
+            locale = this.getFallback();
+        }
+
+        if (this.messages[locale][key] === undefined) {
             return null;
         }
 
-        // Get message from default locale.
-        var message = this.messages[key.source];
-        var entries = key.entries.slice();
-        var subKey = '';
-        while (entries.length && message !== undefined) {
-            var subKey = !subKey ? entries.shift() : subKey.concat('.', entries.shift());
-            if (message[subKey] !== undefined) {
-                message = message[subKey]
-                subKey = '';
-            }
-        }
-
-        // Get message from fallback locale.
-        if (typeof message !== 'string' && this.messages[key.sourceFallback]) {
-            message = this.messages[key.sourceFallback];
-            entries = key.entries.slice();
-            subKey = '';
-            while (entries.length && message !== undefined) {
-                var subKey = !subKey ? entries.shift() : subKey.concat('.', entries.shift());
-                if (message[subKey]) {
-                    message = message[subKey]
-                    subKey = '';
-                }
-            }
-        }
-
-        if (typeof message !== 'string') {
-            return null;
-        }
-
-        return message;
+        return this.messages[locale][key];
     };
 
     /**
