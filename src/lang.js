@@ -281,7 +281,7 @@
             locale = this.getFallback();
         }
 
-        if (this.messages[locale][key] === undefined) {
+        if (this.messages[locale] === undefined || this.messages[locale][key] === undefined) {
             return null;
         }
 
