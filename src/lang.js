@@ -137,13 +137,13 @@
      * @return {string} The translation message, if not found the given key.
      */
     Lang.prototype.get = function(key, replacements, locale) {
-        if (!this.has(key, locale)) {
-            return key;
-        }
-
-        var message = this._getMessage(key, locale);
-        if (message === null) {
-            return key;
+        if ( ! this.has(key, locale)) {
+            var message = key;
+        } else {
+            var message = this._getMessage(key, locale);
+            if (message === null) {
+                message = key;
+            }
         }
 
         if (replacements) {
